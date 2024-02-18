@@ -6,35 +6,44 @@ Spring and Angular are two great frameworks that we all often use to build our a
 Creating Spring Boot and Angular Projects
 Before deploying our app we first need to create and configure the frontend and backend projects. Let’s start by creating the backend project first.
 
-Backend Project
+##  Backend Project
 You can use Spring Initializr or create the project from scratch.
 
 After initializing the project, add the Spring Boot parent.
-'''code
+
+```code
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.1.0</version>
 </parent>
-''
+
+```
 Next add the following dependency.
 
+```
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 </dependencies>
+
+```
 Now create a simple class with the main method.
 
+```
 @SpringBootApplication
 public class App {
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
     }
 }
+
+```
 Create a controller to get the version of the app.
 
+```
 @RestController
 @RequestMapping("/api/system")
 public class SystemController {
@@ -43,8 +52,11 @@ public class SystemController {
         return ResponseEntity.ok(Map.of("version", "1.0.0"));
     }
 }
+
+```
 Finally, create another controller that will be used to redirect URLs that Spring doesn’t know about to Angular and let it handle routing.
 
+```
 @Controller
 public class IndexController implements ErrorController {
     @RequestMapping(value = "${server.error.path:${error.path:/error}}")
@@ -52,14 +64,19 @@ public class IndexController implements ErrorController {
         return "forward:/index.html";
     }
 }
+
+```
 With the above configuration, we’ve created a simple app which exposes a REST API to get the app’s version. Now Let’s move to the next step.
 
-Frontend Project
+##  Frontend Project
 In order to generate and run the Angular project, you’ll need Node.js installed, so make sure you’ve already installed it.
 
 Install the Angular CLI which is a command-line interface tool that you use to initialize, develop, scaffold, and maintain Angular applications directly from a command shell. Run the following command in your terminal:
 
+```
 npm i @angular/cli
+
+```
 After that, navigate to the src folder of your Spring project and run the command:
 
 ng new --standalone
