@@ -79,11 +79,15 @@ npm i @angular/cli
 ```
 After that, navigate to the src folder of your Spring project and run the command:
 
+```
 ng new --standalone
+
+```
 This command will trigger the project initialization, while the standalone flag makes sure that the project will use standalone components instead of modules. Now name the project as frontend and leave the rest as default.
 
 Once the project has been initialized, create a file named system.service.ts and paste the following code:
 
+```
 @Injectable({
   providedIn: "root"
 })
@@ -93,21 +97,30 @@ export class SystemService {
     return this.httpClient.get<{ version: string }>("/api/system/version");
   }
 }
+
+```
 Right now if we run our Spring Boot app it will be available on port 8080 while our Angular dev server will be on port 4200. This configuration will generate CORS errors, so to overcome this problem create a file named proxy.conf.json in the src folder and paste the following code:
 
+```
 {
   "/api": {
     "target": "http://localhost:8080",
     "secure:": false
   }
 }
+
+```
 After that, we need to tell Angular to use our proxy conf, so edit angular.json file and add the following code inside the serve property:
 
+```
 "options": {
     "proxyConfig": "src/proxy.conf.json"
 }
+
+```
 Next replace app.component.ts content with the following code:
 
+```
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -122,16 +135,22 @@ export class AppComponent implements OnInit {
     this.version$ = this.systemService.getVersion().pipe(map(value => value.version));
   }
 }
+
+```
 Finally, replace app.component.html with the following code:
 
+```
 <h1>Hi There</h1>
 <h3>App version is: {{version$ | async }}</h3>
-Plugins Configuration
+
+```
+## Plugins Configuration
 Now that everything is ready, we can finally focus on deploying Angular and Spring as a single app. To do that, we’ll use a Maven plugin called frontend-maven-plugin. Thanks to it, we can build both frontend and backend with just one click and using other plugins we’ll package the result into one file which in this case will be a .jar.
 
-Frontend Configuration
+### Frontend Configuration
 Next, we need to configure frontend-maven-plugin which comes with a set of built-in commands.
 
+```
 <plugin>
     <groupId>com.github.eirslett</groupId>
     <artifactId>frontend-maven-plugin</artifactId>
@@ -169,11 +188,14 @@ Next, we need to configure frontend-maven-plugin which comes with a set of built
         <workingDirectory>src/frontend</workingDirectory>
     </configuration>
 </plugin>
+
+```
 In the executions, we install node and npm, then we install the dependencies and finally we run the build script. In the configuration tag, we implement the working directory, select the Node.js version and choose where to install it.
 
-Backend Configuration
+### Backend Configuration
 After building the frontend, we need to get the build result and add it to our Spring Boot project before it gets built. To do so we’ll use maven-resources-plugin which handles the copying of project resources to the output directory.
 
+```
 <plugin>
     <artifactId>maven-resources-plugin</artifactId>
     <executions>
@@ -194,26 +216,31 @@ After building the frontend, we need to get the build result and add it to our S
         </execution>
     </executions>
 </plugin>
+
+```
 In the configuration tag we simply configure to copy the build result of Angular into our static folder where Spring will serve it.
 
 Next add spring-boot-maven-plugin which we’ll use to build our final .jar.
 
+```
 <plugin>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>
 </plugin>
-Building the Projects
+
+```
+### Building the Projects
 At this point it’s time to build our projects by running mvn clean install.
 After building the application, in the backend is generated the target/ folder which contains angular-spring-deployment.jar and in the frontend is generated the dist/ folder and node_modules.
 
-Application Testing
+#### Application Testing
 Now that we’ve built the project, we can finally test if our app works properly.
 
-Open the terminal and navigate to your project /target folder.
-Run java -jar spring-angular-deployment.jar.
-Open the browser and type the following url: http://localhost:8080
-Deploying Spring Boot and Angular as a Single App
+- Open the terminal and navigate to your project /target folder.
+- Run java -jar spring-angular-deployment.jar.
+- Open the browser and type the following url: http://localhost:8080
+- Deploying Spring Boot and Angular as a Single App
 The app is working fine, we are able to get version from the backend and display it in our frontend.
 
-Conclusion
+## Conclusion
 We have created a Spring Boot app and added a front end to it using Angular. Using this configuration a backend developer can deploy the app without knowing how to build the frontend, while the frontend developer can easily update and test the frontend from a regular IDE by running the app in the usual way.
