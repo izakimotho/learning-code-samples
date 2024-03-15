@@ -1,0 +1,47 @@
+version: "3.8"
+services:
+  db:
+    image: postgres
+    container_name: local_pgdb
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: administrator
+      POSTGRES_PASSWORD: RootL3g3ndary++!
+      PGDATA: /data/postgres
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    volumes:
+      - local_pgdata:/var/lib/postgresql/data  
+      # copy the sql script to create tables
+      - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql    
+    networks:
+      - postgres
+
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: kishdevt@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: RootL3g3ndary++!
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin    
+    networks:
+      - postgres
+
+volumes:
+  local_pgdata:
+  pgadmin-data:
+
+networks:
+  postgres:
+    driver: bridge
+
+ 

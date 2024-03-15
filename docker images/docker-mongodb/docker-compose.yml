@@ -1,0 +1,21 @@
+version: '3.3'
+services:
+    mongo:
+        ports:
+            - '27017:27017'
+        container_name: dkrcomp-mongo
+        restart: always
+
+        volumes:
+        - mongodb-data:/data/db
+        # - ./db/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+        logging:
+            options:
+                max-size: 1g
+        # command: [--auth]
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=mongoadmin
+            - MONGO_INITDB_ROOT_PASSWORD=RootL3g3ndary++!        
+        image: mongo:latest
+volumes:
+  mongodb-data:
