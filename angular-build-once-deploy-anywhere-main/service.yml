@@ -1,0 +1,24 @@
+version: '3.5'
+services:
+  webchat:
+    image: registry1.lunna.chat/webchat:thorntree
+    container_name: webchat
+    ports:
+      - "9011:80"
+    labels:
+      - "traefik.enable=true"
+      # Keycloak URL (replace with yours)
+      - "traefik.http.routers.webchat.rule=Host(`web.lunna.chat`)"
+      - "traefik.http.routers.webchat.service=webchat"
+      - "traefik.http.routers.webchat.entrypoints=websecure"
+      - "traefik.http.routers.webchat.tls=true"
+      - "traefik.http.routers.webchat.tls.certresolver=myresolver"
+      - "traefik.http.services.webchat.loadbalancer.passhostheader=true"
+      - "traefik.http.routers.webchat.middlewares=compresstraefik"
+      - "traefik.http.middlewares.compresstraefik.compress=true"
+    networks:
+      - lunna_petwork
+
+networks:
+  lunna_petwork:
+    external: true

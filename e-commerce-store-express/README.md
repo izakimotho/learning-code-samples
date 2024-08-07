@@ -39,9 +39,3 @@ To start the service, run the following command:
 ```shell
 npm start
 ```
-
-
-
-
-
-

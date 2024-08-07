@@ -1,0 +1,40 @@
+## step 1 intall dependencies
+FROM node:18-alpine as deps
+
+# message
+RUN echo "Initialize dependencies installations..."
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+
+# installation of dependencies
+RUN echo "dependencies installation complete."
+
+##step 2: app construction
+FROM node:18-alpine as builder
+
+# message
+RUN echo "Initialize app construction..."
+
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN npm run build
+
+# message
+RUN echo "construction of Application complete."
+
+## Server Application using Nginx Server
+FROM nginx:alpine as prod
+
+# message  
+RUN echo "Initialize in  Server Nginx..."
+
+EXPOSE 80
+COPY --from=builder /app/dist/angular17-spring-docker/browser /usr/share/nginx/html
+
+# message  
+RUN echo "Application served on Server Nginx."
+
+CMD [ "nginx", "-g", "daemon off;"]
