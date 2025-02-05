@@ -1,7 +1,5 @@
 # spring-boot-postgres-flyway
 
-[![keep growing logo](readme-images/logo_250x60.png)](https://keepgrowing.in)
-
 spring-boot-postgres-flyway is a scaffolding for a web application.
 It can be built into a single jar file using Maven.
 
