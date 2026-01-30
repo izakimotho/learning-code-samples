@@ -15,7 +15,7 @@
     "jsonwebtoken": "9.0.0",
     "morgan": "1.10.0",
     "sequelize": "6.31.1",
-    "sqlite3": "5.1.6"
+    "sqlite3": "5.1.7"
   },
   "devDependencies": {
     "prettier": "2.8.8"
